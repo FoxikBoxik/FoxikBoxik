@@ -11,13 +11,13 @@
   <!-- Скриптовые языки (Batch & VBS) -->
   <img src="https://img.icons8.com/color/48/console.png" height="40" alt="batch logo" title="Batch" />
   <img width="12" />
-  <img src="https://img.icons8.com/color/48/visual-basic.png" height="40" alt="vbs logo" title="VBScript" />
 </div>
 
 ### 💻 Инструменты разработки
 <div align="center">
   <img src="https://skillicons.dev/icons?i=vscode,git,github,powershell" height="40" alt="tools" />
 </div>
+
 ### ⚡ Немного обо мне
 - вайбкодер☠️☠️☠️
 
