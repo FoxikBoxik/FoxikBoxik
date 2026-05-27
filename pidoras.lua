@@ -1,5 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/blackowl1231/Z3US/refs/heads/main/main.lua"))()
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/FoxikBoxik/FoxikBoxik/refs/heads/main/pidoras.lua"))()
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
